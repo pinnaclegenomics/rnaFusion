@@ -4,8 +4,8 @@ process STAR_ALIGN {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:019f262d90511939dce2dca4b7c868fc108f73db-0' :
-        'biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:019f262d90511939dce2dca4b7c868fc108f73db-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:ded3841da0194af2701c780e9b3d653a85d27489-0' :
+        'biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:ded3841da0194af2701c780e9b3d653a85d27489-0' }"
 
     input:
     tuple val(meta), path(reads, stageAs: "input*/*")
@@ -81,6 +81,8 @@ process STAR_ALIGN {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
+    echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
+    echo "" | gzip > ${prefix}.unmapped_2.fastq.gz
     touch ${prefix}Xd.out.bam
     touch ${prefix}.Log.final.out
     touch ${prefix}.Log.out
@@ -89,8 +91,6 @@ process STAR_ALIGN {
     touch ${prefix}.toTranscriptome.out.bam
     touch ${prefix}.Aligned.unsort.out.bam
     touch ${prefix}.Aligned.sortedByCoord.out.bam
-    touch ${prefix}.unmapped_1.fastq.gz
-    touch ${prefix}.unmapped_2.fastq.gz
     touch ${prefix}.tab
     touch ${prefix}.SJ.out.tab
     touch ${prefix}.ReadsPerGene.out.tab
